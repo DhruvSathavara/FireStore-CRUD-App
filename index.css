@@ -1,0 +1,21 @@
+*{
+    margin-left: 5px;
+    margin-top: 5px;
+}
+label{
+    display: inline-block;
+    width: 80px;
+}
+body{
+    color: #a70b0b ;
+}
+#select{
+    width: 100px;
+    height: 32px;
+    color: inherit;
+}
+.btn{
+    margin: 4px;
+    height: 40px;
+    width: 100px;
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIRESTORE CRUD</title>
+    <link rel="stylesheet" " href=" index.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <div class="input-group mb-3">
+        <label id="label">Roll NO</label><input id="rollbox" type="number" class="form-control" placeholder="Roll no"
+            aria-label="Username">
+    </div>
+    <br>
+    <div class="input-group mb-3">
+        <label id="label">Name</label><input id="namebox" type="text" class="form-control" placeholder="Student Name"
+            aria-label="Username">
+    </div>
+    <br>
+    <div class="input-group mb-3">
+        <label id="label">Section</label><input id="secbox" type="text" class="form-control" placeholder="Section"
+            aria-label="Username">
+    </div>
+    <br>
+    <div class="input-group mb-3">
+
+        <div class="input-group mb-3">
+            <label id="label" class="input-group-text" for="inputGroupSelect01">Gender</label>
+            <select class="form-select" id="genbox">
+                <option selected>Choose...</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+
+
+        <hr>
+        <button id="insertbtn" type="button" class="btn btn-primary">INSERT</button>
+        <button id="viewbtn" type="button" class="btn btn-primary">VIEW</button>
+        <button id="updatebtn" type="button" class="btn btn-primary">UPDATE</button>
+        <button id="deletebtn" type="button" class="btn btn-danger">DELETE</button>
+
+
+
+        <!----------------------------------- IPORTING CONFIGURATION ---------------------------------->
+
+        <script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-app.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyAwqFP80pN6yeKTGNuyL7phCELvEzV6uNs",
+                authDomain: "firestore-crud-92d53.firebaseapp.com",
+                projectId: "firestore-crud-92d53",
+                storageBucket: "firestore-crud-92d53.appspot.com",
+                messagingSenderId: "305741746560",
+                appId: "1:305741746560:web:6addf60a25c60af6c3f165"
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+
+            import {
+                getFirestore, doc, setDoc, getDoc, collection, addDoc, updateDoc, deleteDoc, deleteField
+            } from "https://www.gstatic.com/firebasejs/9.8.1/firebase-firestore.js";
+
+            const db = getFirestore();
+
+
+
+            let rollBox = document.getElementById("rollbox")
+            let nameBox = document.getElementById("namebox")
+            let secBox = document.getElementById("secbox")
+            let genBox = document.getElementById("genbox")
+
+            let insertBtn = document.getElementById("insertbtn")
+            let viewBtn = document.getElementById("viewbtn")
+            let updateBtn = document.getElementById("updatebtn")
+            let deleteBtn = document.getElementById("deletebtn")
+
+//-------------------------------------------- TO ADD DATA -----------------------------------------
+
+async function AddDocument_CustomID(){
+    var ref = doc(db,"TheStudentsList",rollBox.value);
+
+     await setDoc(ref,{
+        NameOfStudent :nameBox.value,
+        RollNo : rollBox.value,
+        Section : secBox.value,
+        Gender : genBox.value
+    }
+    ).then(()=>{
+        alert("Data added successfully")
+
+        nameBox.value=""
+        secBox.value=""
+        genBox.value="Choose.."
+        rollBox.value=""
+    })
+    .catch((err)=>{
+        alert("Unsuccessful operation , error"+err)
+    })
+}
+
+
+
+//-------------------------------------------- TO GET DATA -----------------------------------------
+
+async function GetDocument (){
+    var ref = doc(db,"TheStudentsList",rollBox.value);
+    const docSnap = await getDoc(ref);
+
+    if(docSnap.exists()){
+        nameBox.value = docSnap.data().NameOfStudent
+        secBox.value = docSnap.data().Section
+        genBox.value = docSnap.data().Gender
+    }
+    else{
+        alert("No such document!!")
+    }
+}
+
+//-------------------------------------------- TO UPDATE DATA -----------------------------------------
+
+async function UpdateFieldInDocument(){
+var ref = doc(db,"TheStudentsList",rollBox.value)
+
+await updateDoc(ref,{
+    NameOfStudent :nameBox.value,
+        Section : secBox.value,
+        Gender : genBox.value
+}
+).then(()=>{
+        alert("Data updated")
+
+        nameBox.value=""
+        secBox.value=""
+        genBox.value="Choose.."
+        rollBox.value=""
+    })
+    .catch((err)=>{
+        alert("Unsuccessful operation , error"+err)
+    })
+}
+
+//-------------------------------------------- TO DELETE DATA -----------------------------------------
+
+async function DeleteDocument(){
+    var ref = doc(db,"TheStudentsList",rollBox.value)
+    
+    
+    await deleteDoc(ref)
+    .then(()=>{
+        alert("Data deleted")
+
+        nameBox.value=""
+        secBox.value=""
+        genBox.value="Choose.."
+        rollBox.value=""
+    })
+    .catch((err)=>{
+        alert("Unsuccessful operation , error"+err)
+    })
+}
+function EmpatyInputs(){
+    nameBox=""
+    rollBox=""
+    secBox=""
+    genBox=""
+}
+insertBtn.addEventListener("click",AddDocument_CustomID )
+viewBtn.addEventListener("click",GetDocument )
+updateBtn.addEventListener("click",UpdateFieldInDocument)
+deleteBtn.addEventListener("click",DeleteDocument)
+
+
+        </script>
+</body>
+
+</html>
